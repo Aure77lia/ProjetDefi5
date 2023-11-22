@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Carte du département de la Charente</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <style>
+    #map {
+      height: 800px;
+    }
+  </style>
+</head>
+<body>
+
+<div id="map"></div>
+
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script>
+  var map = L.map('map').setView([45.833333, 0.166667], 9); // Coordonnées approximatives du centre de la Charente et niveau de zoom
+
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© OpenStreetMap contributors'
+  }).addTo(map);
+
+  // Charger le contour du département de la Charente depuis le fichier GeoJSON
+  fetch('geojson_charente.geojson')
+    .then(response => response.json())
+    .then(data => {
+      L.geoJSON(data, {
+        color: 'red',
+        pointToLayer: function (feature, latlng) {
+          // Désactiver la création de marqueurs
+          return L.circleMarker(latlng, {
+            radius: 0, // Taille du marqueur à 0 pour le rendre invisible
+            fillOpacity: 0 // Opacité du marqueur à 0 pour le rendre invisible
+          });
+        },
+        onEachFeature: function (feature, layer) {
+          // Construire le contenu de la popup avec les informations de la commune
+          var popupContent = '<b>Nom de la commune:</b> ' + feature.properties.name + '<br>' +
+                              '<b>Population:</b> ' + feature.properties.population + '<br>' +
+                              '<b>Code postal:</b> ' + feature.properties.postal_code + '<br>' +
+                              '<b>INSEE:</b> ' + feature.properties['ref:INSEE'];
+          layer.bindPopup(popupContent);
+        }
+      }).addTo(map);
+    })
+    .catch(error => console.error('Erreur lors du chargement du fichier GeoJSON:', error));
+</script>
+
+</body>
+</html>

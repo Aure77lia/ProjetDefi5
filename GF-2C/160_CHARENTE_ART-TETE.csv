@@ -1,0 +1,9 @@
+TN40;TN40;TN40;TN40;TN40;TN40;TN40;TN40;TN40;TN40;TN40;TN41;TN41;TN41;TN41;TN41;TN41;TN41;TN41;TN41
+CSDEP;CSDIR;CTCN;CTCNIA;NCCO;TYCNGR;CTCNGR;COARCL;CTADR0;NIAF;NIAFBT;BX003;DITP;DCFI8R;LTDP;LICUTP;FILLER;BX001;FILLER;BX001A
+Code departement;Numero de direction sur 1c;CODE COMMUNE DE L'AFT;ancien code cne en presence d ifp;numero de compte fichier coll CFE;type EPCI;code EPCI;type article sur 2 caracteres;code voie du lieu d'imposition;NUMERO IMMEUBLE DE L'AFT;indice repetition b/t/q cfe type 1;ZONE BANALISEE 3 CARACTERES X;annee campagne cfe;Date de creation du fichier sur 8 c.;Libelle du departement;libelle collectivite;;ZONE BANALISEE 1 CARACTERE X;;ZONE BANALISEE 1 CARACTERE X
+1;3;4;7;10;16;17;20;22;26;30;31;34;38;46;76;141;204;205;950
+2;3;6;9;15;16;19;21;25;29;30;33;37;45;75;140;203;204;949;950
+2;1;3;3;6;1;3;2;4;4;1;3;4;8;30;65;63;1;745;1
+X;X;X;X;9;X;9;X;X;X;X;X;9;X;X;X;X;X;X;X
+;;;;;;;;;;;;;;;;;;;
+16;0;   ;   ;0; ;0;  ;    ;    ; ;CFE;2022;20230223;CHARENTE                      ;                                                                 ;                                                               ; ;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         ;X

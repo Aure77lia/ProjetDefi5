@@ -7,37 +7,87 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
   <style>
     #map {
-      height: 800px;
+      height: 500px;
+      width: 500px;
     }
   </style>
 </head>
 <body>
+  <table border="1" style="width: 100%;">
+    <tr>
+      <td>
+        <div id="map" style="width: 500px;"></div>
+      </td>
+      <td>
+        <form>
+          <select style="">
+            <option>Bonjour</option>
+          </select>
+        </form>
+      </td>
+    </tr>
+    
+  </table>
 
-<div id="map"></div>
+
+
 
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 <script>
-  var map = L.map('map').setView([45.833333, 0.166667], 9); // Coordonnées approximatives du centre de la Charente et niveau de zoom
+  var map = L.map('map').setView([45.833333, 0.166667], 9);
 
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '© OpenStreetMap contributors'
+    attribution: '© OpenStreetMap contributors',
   }).addTo(map);
 
-  // Charger le contour du département de la Charente depuis le fichier GeoJSON
-  fetch('geojson_charente.geojson')
+  var highlightedLayer; // Variable pour stocker la couche en surbrillance
+
+  fetch('communes-16-charente.geojson')
     .then(response => response.json())
     .then(data => {
       L.geoJSON(data, {
         color: 'red',
-        pointToLayer: function (feature, latlng) {
-          // Désactiver la création de marqueurs
-          return L.circleMarker(latlng, {
-            radius: 0, // Taille du marqueur à 0 pour le rendre invisible
-            fillOpacity: 0 // Opacité du marqueur à 0 pour le rendre invisible
-          });
-        },
         onEachFeature: function (feature, layer) {
-          // Construire le contenu de la popup avec les informations de la commune
+          layer.on({
+            mouseover: function (e) {
+              highlightedLayer = e.target;
+              highlightedLayer.setStyle({
+                color: 'darkred',
+                weight: 3
+              });
+            },
+            mouseout: function (e) {
+              if (highlightedLayer) {
+                highlightedLayer.setStyle({
+                  color: 'red',
+                  weight: 3
+                });
+              }
+            },
+            click: function (e) {
+              zoomToFeature(e);
+            }
+          });
+          function zoomToFeature(e) {
+            map.fitBounds(e.target.getBounds());
+        }
+       
+
+        function updateDatalist(value) {
+
+          var datalist = document.getElementById('dynamicDatalist');
+          var dataListOptions = ['jeux'];
+      
+          var filteredOptions = dataListOptions.filter(option => option.toLowerCase().includes(value.toLowerCase()));
+      
+          filteredOptions.forEach(option => {
+            var optionElement = document.createElement('option');
+            optionElement.value = option;
+            datalist.appendChild(optionElement);
+          });
+          datalist.style.display = filteredOptions.length > 0 ? 'block' : 'none';
+        }
+
           var popupContent = '<b>Nom de la commune:</b> ' + feature.properties.name + '<br>' +
                               '<b>Population:</b> ' + feature.properties.population + '<br>' +
                               '<b>Code postal:</b> ' + feature.properties.postal_code + '<br>' +

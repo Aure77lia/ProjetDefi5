@@ -36,6 +36,7 @@
           // Retourner null pour désactiver la création de marqueurs
           return null;
         },
+        
         onEachFeature: function (feature, layer) {
           // Construire le contenu de la popup avec les informations de la commune
           var popupContent = '<b>Nom de la commune:</b> ' + feature.properties.name + '<br>' +
@@ -60,6 +61,7 @@
                 fillOpacity: 0.2
               });
             }
+            
           });
         }
       }).addTo(map);

@@ -46,6 +46,8 @@ fetch('communes_charente.geojson')
 
         layer.on({
           mouseover: function (event) {
+
+            // Change l'opacité
             if (!selectedCommunes[feature.properties['ref:INSEE']]) {
               event.target.setStyle({
                 fillColor: '#d49e29',
@@ -54,6 +56,8 @@ fetch('communes_charente.geojson')
             }
           },
           mouseout: function (event) {
+
+            // Reset l'opacité
             if (!selectedCommunes[feature.properties['ref:INSEE']]) {
               event.target.setStyle({
                 fillColor: '',

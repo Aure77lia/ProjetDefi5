@@ -3,11 +3,16 @@ map.setMinZoom(9);
 
 
 var resetButton = L.easyButton('fa-home', function () {
-  // Reviens aux coordonnées et au zoom par défaut
+  // Revenir aux coordonnées et au zoom par défaut
   map.setView([45.6754, 0.1791], 9);
 });
 
-// Ajoute le bouton à la carte
+var resetButton = L.easyButton('fa-home', function () {
+  // Revenir aux coordonnées et au zoom par défaut
+  map.setView([45.6754, 0.1791], 9);
+});
+
+// Ajouter le bouton à la carte
 resetButton.addTo(map);
 
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -21,7 +26,7 @@ var cardList = document.getElementById('card-list');
 var communeInfos = []; // Liste pour stocker les informations des communes
 var selectedCommunes = {}; // Dictionnaire pour suivre l'état des communes sélectionnées
 
-// Charge le contour
+// Charger le contour du département de la Charente depuis le fichier GeoJSON
 fetch('communes_charente.geojson')
   .then(response => response.json())
   .then(data => {
@@ -33,8 +38,6 @@ fetch('communes_charente.geojson')
         return null;
       },
       onEachFeature: function (feature, layer) {
-
-        // Prend les 3 derniers numeros de l'insee
         var inseeDigits = feature.properties['ref:INSEE'].slice(-3);
 
         if (inseeDigits[0] === '0') {
@@ -46,8 +49,6 @@ fetch('communes_charente.geojson')
 
         layer.on({
           mouseover: function (event) {
-
-            // Change l'opacité
             if (!selectedCommunes[feature.properties['ref:INSEE']]) {
               event.target.setStyle({
                 fillColor: '#d49e29',
@@ -56,8 +57,6 @@ fetch('communes_charente.geojson')
             }
           },
           mouseout: function (event) {
-
-            // Reset l'opacité
             if (!selectedCommunes[feature.properties['ref:INSEE']]) {
               event.target.setStyle({
                 fillColor: '',
@@ -68,21 +67,23 @@ fetch('communes_charente.geojson')
           click: function (event) {
             var insee = feature.properties['ref:INSEE'];
 
-            // Ajoute ou supprime la commune de la liste des sélectionnées
+            document.cookie = "insee = " + insee;
+
+            // Ajouter ou supprimer la commune de la liste des sélectionnées
             selectedCommunes[insee] = !selectedCommunes[insee];
 
             if (selectedCommunes[insee]) {
-              // Ajoute les informations de la commune à la liste
+              // Ajouter les informations de la commune à la liste
               communeInfos.push(feature.properties);
             } else {
-              // Supprime la commune de la liste
+              // Supprimer la commune de la liste
               var index = communeInfos.findIndex(info => info['ref:INSEE'] === insee);
               if (index !== -1) {
                 communeInfos.splice(index, 1);
               }
             }
 
-            // Rafraîchi l'affichage des informations des communes dans la carte Bootstrap
+            // Rafraîchir l'affichage des informations des communes dans la carte Bootstrap
             showCommuneInfo();
           }
         });
@@ -92,12 +93,13 @@ fetch('communes_charente.geojson')
   .catch(error => console.error('Erreur lors du chargement du fichier GeoJSON:', error));
 
 function showCommuneInfo() {
+  // Effacer le contenu précédent
   cardList.innerHTML = '';
 
-  // Affiche le titre
+  // Afficher le titre
   cardTitle.textContent = 'Informations des communes';
 
-  // Ajoute chaque commune à la liste en affichant les infos
+  // Ajouter chaque commune à la liste
   communeInfos.forEach((info, index) => {
     var communeItem = document.createElement('div');
     communeItem.innerHTML = '<b>Nom de la commune:</b> ' + info.name + '<br>' +
@@ -107,7 +109,7 @@ function showCommuneInfo() {
       '<hr>';
     cardList.appendChild(communeItem);
 
-    // Mets à jour le style de la commune sur la carte Leaflet
+    // Mettre à jour le style de la commune sur la carte Leaflet
     var layer = map._layers[info['ref:INSEE']];
     if (layer) {
       layer.setStyle({
@@ -117,7 +119,7 @@ function showCommuneInfo() {
     }
   });
 
-  communeCard.style.display = 'block'; // Affiche la card
+  communeCard.style.display = 'block'; // Afficher la carte Bootstrap
 }
 
 

@@ -1,0 +1,59 @@
+#map {
+    box-shadow: 8px 10px 8px -3px rgba(188,184,184,0.75);
+    -webkit-box-shadow: 8px 10px 8px -3px rgba(188,184,184,0.75);
+    -moz-box-shadow: 8px 10px 8px -3px rgba(188,184,184,0.75);
+    height: 80vh;
+    border-radius: 10px;
+  }
+
+#parametre, #donnees, #communeSelectionnee {
+    box-shadow: 8px 10px 8px -3px rgba(188,184,184,0.75);
+    -webkit-box-shadow: 8px 10px 8px -3px rgba(188,184,184,0.75);
+    -moz-box-shadow: 8px 10px 8px -3px rgba(188,184,184,0.75);
+    height: 80vh;
+}
+
+#btnValide {
+    background: #22465e;
+    border-color: #22465e;
+    margin-top: 14rem;
+}
+.blueFont {
+    color: #22465e;
+}
+
+.bg-22465e {
+    background-color: #22465e !important;
+}
+
+.goldTitle {
+    font-size: 3em;
+    font-weight: bold;
+    color: #c88c0a;
+    margin: 0;
+}
+ 
+.fond {
+    background: #cccccc;
+}
+
+.range input[type="range"]::-webkit-slider-thumb {
+    background-color: #22465e;
+}
+
+.range input[type="range"]::-moz-range-thumb {
+    background-color: #22465e;
+}
+
+.form-check-input[type="checkbox"] {
+    border-color: #22465e;
+}
+
+.form-check-input[type="checkbox"]:checked {
+    background-color: #22465e;
+    border-color: #22465e;
+}
+
+.close-icon {
+    cursor: pointer;
+}

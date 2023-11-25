@@ -56,7 +56,7 @@
                             <div class="card-body">
                                 <h1 class="text-center goldTitle">Paramètres</h1>
                                 <h6 class="card-subtitle mb-2 text-body-secondary"></h6>
-                                <p class="card-text  text-center">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                                <p class="card-text  text-center">Veuillez choisir les paramètres à varier</p>
                                 <label class="form-label" for="tauxCFE">Taux CFE <output id="pourcentageTauxCFE">0 %</output></label>
                                 <div class="range">
                                     <input type="range" class="form-range" id="tauxCFE" min="0" max="100" value="0"/>
@@ -74,7 +74,7 @@
                                         Code nature exonération 2
                                     </label>
                                 </div>
-                                <a name="" id="btnValide" class="btn btn-primary" href="#donnees" role="button">Valider</a>
+                                <center><a name="" id="btnValide" class="btn btn-primary" href="#donnees" role="button">Valider</a></center>
                             </div>
                         </div>
                     </div>

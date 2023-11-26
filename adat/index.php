@@ -58,12 +58,29 @@
                                 <h1 class="text-center goldTitle">Paramètres</h1>
                                 <h6 class="card-subtitle mb-2 text-body-secondary"></h6>
                                 <p class="card-text  text-center">Veuillez choisir les paramètres à varier</p>
-                                <label class="form-label" for="tauxCFE">Taux CFE <output id="pourcentageTauxCFE">0 %</output></label>
+
+                                <h4 id="commune1"><i class="fa-solid fa-map-pin goldFont"></i> Commune 1</h4>
+                                <label class="form-label" for="tauxCFE1">Taux CFE <output id="pourcentageTauxCFE1">0 %</output></label>
                                 <div class="range">
-                                    <input type="range" class="form-range" id="tauxCFE" min="0" max="100" value="0"/>
+                                    <input type="range" class="form-range" id="tauxCFE1" min="0" max="100" value="0" />
+                                </div>
+                                <label class="form-label" for="tauxExoneration1">Exonération <output id="pourcentageExoneration1">0 %</output></label>
+                                <div class="range">
+                                    <input type="range" class="form-range" id="tauxExoneration1" min="0" max="100" value="0" />
                                 </div>
                                 <br />
-                                <div class="form-check">
+
+                                <h4 id="commune2"><i class="fa-solid fa-map-pin goldFont"></i> Commune 2</h4>
+                                <label class="form-label" for="tauxCFE2">Taux CFE <output id="pourcentageTauxCFE2">0 %</output></label>
+                                <div class="range">
+                                    <input type="range" class="form-range" id="tauxCFE2" min="0" max="100" value="0" />
+                                </div>
+                                <label class="form-label" for="tauxExoneration2">Exonération <output id="pourcentageExoneration2">0 %</output></label>
+                                <div class="range">
+                                    <input type="range" class="form-range" id="tauxExoneration2" min="0" max="100" value="0" />
+                                </div>
+
+                                <!--<div class="form-check">
                                     <input class="form-check-input" type="checkbox" value="" id="exoneration1">
                                     <label class="form-check-label" for="exoneration1">
                                         Code nature exonération 1
@@ -74,8 +91,8 @@
                                     <label class="form-check-label" for="exoneration2">
                                         Code nature exonération 2
                                     </label>
-                                </div>
-                                <center><a name="" id="btnValide" class="btn btn-primary" href="#donnees" role="button">Valider</a></center>
+                                </div>-->
+                                <center><a name="" id="btnValide" class="btn btn-primary" href="#donnees" role="button"><i class="fa-solid fa-check"></i> Valider</a></center>
                             </div>
                         </div>
                     </div>
@@ -111,17 +128,50 @@
                             <div class="card-body">
                                 <h1 class="text-center goldTitle">Données</h1>
                                 <div class="row">
-                                    <div class="col-12 col-sm-3">
-                                        dsdscsddsc
+                                    <div class="col-12 col-sm-6">
+                                        <br>
+                                        <div class="card" id="donneeCommune1">
+                                            <div class="card-body">
+                                                <h3 class="text-center">Commune 1</h3>
+                                                <div class="row">
+                                                    <div class="col-12 col-sm-6">
+                                                        <center><h5>Ancienne</h5></center><br/>
+                                                        Somme base locataire : <i id="sommeBaseLocataire1A"></i><br/><br/>
+                                                        Total recette : <i id="totalRecette1A"></i>
+                                                    </div>
+                                                    <div class="col-12 col-sm-6">
+                                                        <center><h5>Nouvelle</h5></center><br/>
+                                                        Somme base locataire : <i id="sommeBaseLocataire1N"></i><br/><br/>
+                                                        Total recette : <i id="totalRecette1N"></i>
+                                                    </div>
+                                                </div>
+                                                <br>
+                                                <center><a name="" id="btnCopier1" class="btn btn-primary btnCopier" role="button"><i class="fa-solid fa-copy"></i> Copier</a></center>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="col-12 col-sm-3">
-                                        sdsdds
-                                    </div>
-                                    <div class="col-12 col-sm-3">
-                                        sdsdds
-                                    </div>
-                                    <div class="col-12 col-sm-3">
-                                        sdsdds
+
+                                    <div class="col-12 col-sm-6">
+                                        <br>
+                                        <div class="card" id="donneeCommune2">
+                                            <div class="card-body">
+                                                <h3 class="text-center">Commune 2</h3>
+                                                <div class="row">
+                                                    <div class="col-12 col-sm-6">
+                                                        <center><h5>Ancienne</h5></center><br/>
+                                                        Somme base locataire : <i id="sommeBaseLocataire2A"></i><br/><br/>
+                                                        Total recette : <i id="totalRecette2A"></i>
+                                                    </div>
+                                                    <div class="col-12 col-sm-6">
+                                                        <center><h5>Nouvelle</h5></center><br/>
+                                                        Somme base locataire : <i id="sommeBaseLocataire2N"></i><br/><br/>
+                                                        Total recette : <i id="totalRecette2N"></i>
+                                                    </div>
+                                                </div>
+                                                <br>
+                                                <center><a name="" id="btnCopier2" class="btn btn-primary btnCopier" role="button"><i class="fa-solid fa-copy"></i> Copier</a></center>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -130,16 +180,11 @@
                 </div>
             </div>
         </div>
-    </div>
 
-    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-    <script src="https://unpkg.com/leaflet-easybutton@2.4.0/src/easy-button.js"></script>
-    <script src="js/scriptIndex.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
-    <?php
-    $php_var_val= $_COOKIE['insee'];
-    echo $php_var_val;
-?>
+        <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+        <script src="https://unpkg.com/leaflet-easybutton@2.4.0/src/easy-button.js"></script>
+        <script src="js/scriptIndex.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
 </body>
 
 </html>

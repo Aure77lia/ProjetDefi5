@@ -6,21 +6,32 @@
     border-radius: 10px;
   }
 
-#parametre, #donnees, #communeSelectionnee {
+#parametre, #donnees {
     box-shadow: 8px 10px 8px -3px rgba(188,184,184,0.75);
     -webkit-box-shadow: 8px 10px 8px -3px rgba(188,184,184,0.75);
     -moz-box-shadow: 8px 10px 8px -3px rgba(188,184,184,0.75);
     height: 80vh;
 }
 
-#btnValide {
+#communeSelectionnee, #donneeCommune1, #donneeCommune2 {
+    box-shadow: 8px 10px 8px -3px rgba(188,184,184,0.75);
+    -webkit-box-shadow: 8px 10px 8px -3px rgba(188,184,184,0.75);
+    -moz-box-shadow: 8px 10px 8px -3px rgba(188,184,184,0.75);
+}
+
+#btnValide, #btnCopier1 , #btnCopier2 {
     background: #22465e;
     border-color: #22465e;
-    margin-top: 14rem;
+    margin-top: 1rem;
 }
 .blueFont {
     color: #22465e;
 }
+
+.goldFont {
+    color: #c88c0a;
+}
+
 
 .bg-22465e {
     background-color: #22465e !important;

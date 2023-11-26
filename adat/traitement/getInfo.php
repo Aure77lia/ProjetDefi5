@@ -1,6 +1,30 @@
 <?php
 
-calculTotalRecette2("186") ;
+function getEffectifs($unCTCN, $deuxCTCN){
+    $bdd = new PDO('mysql:host=localhost;dbname=adat;charset=UTF8', 'root', 'root') or die('Erreur connexion à la base de données');
+    $requete= "with aCommuns as (SELECT DISTINCT SUBSTR(CNAC3,1,2) as NACE ,nace.libelleNAF as LIBELLE
+    from c1
+    inner join nace
+    on nace.code like SUBSTR(CNAC3,1,2)
+    WHERE CTCN = :unCTCN
+    INTERSECT(SELECT DISTINCT SUBSTR(CNAC3,1,2) as NACE ,nace.libelleNAF as LIBELLE
+        from c1
+        inner join nace
+        on nace.code like SUBSTR(CNAC3,1,2)
+        WHERE CTCN = :deuxCTCN)
+    )select count(*),SUBSTR(CNAC3,1,2), ac.LIBELLE
+                  from aCommuns ac
+                  inner join c1 
+                  on ac.NACE like SUBSTR(CNAC3,1,2)
+                  group by SUBSTR(CNAC3,1,2);";
+    $statement = $bdd->prepare($requete);
+    $statement->bindParam(':unCTCN', $unCTCN, PDO::PARAM_INT);
+    $statement->bindParam(':deuxCTCN', $deuxCTCN, PDO::PARAM_INT);
+    $statement->execute();
+    $lesEffectifs = $statement->fetchAll(PDO::FETCH_ASSOC);
+    return $lesEffectifs;
+}
+
 
 function getCFE($unCTCN, $unCTCNIA) {
     $bdd = new PDO('mysql:host=localhost;dbname=adat;charset=UTF8', 'root', 'root') or die('Erreur connexion à la base de données');
@@ -21,40 +45,12 @@ function getCFE($unCTCN, $unCTCNIA) {
     else {
         $retour = $lesCFE["TXCNU0"];
     }
-
     return $retour;
 }
 
 function conversionCFE($unCFE){
-    return $unCFE / 100000 ;
+    return $unCFE / 10000000 ;
 }
-
-/*
-function getValeurLocative($unCTCN, $unCTCNIA, $unNCCO) {
-    $bdd = new PDO('mysql:host=localhost;dbname=adat;charset=UTF8', 'root', 'root') or die('Erreur connexion à la base de données');
-    $requete = "SELECT CTCN, CTCNIA, NCCO, VBETF0, MOBS20, CNEX01, CNEX02, MNTPXC, MNBSMA FROM baselocative WHERE CTCN = :unCTCN AND CTCNIA = :unCTCNIA AND NCCO = :unNCCO";
-    $statement = $bdd->prepare($requete);
-    $statement->bindParam(':unCTCN', $unCTCN, PDO::PARAM_INT);
-    $statement->bindParam(':unCTCNIA', $unCTCNIA, PDO::PARAM_INT);
-    $statement->bindParam(':unNCCO', $unNCCO, PDO::PARAM_INT);
-    $statement->execute();
-    $lesValeursLocatives = $statement->fetch(PDO::FETCH_ASSOC);
-
-    
-    $retour = null;
-    if ($lesValeursLocatives["VBETF0"] != 0) {
-        $retour = $lesValeursLocatives["VBETF0"];
-    }
-    else if ($lesValeursLocatives["CNEX01"] == null && $lesValeursLocatives["CNEX02"] == null) {
-        $retour = $lesValeursLocatives["MNBSMA"];
-    }
-    else {
-        $retour = $lesValeursLocatives["MNTPXC"];
-    }
-    
-    return $retour;
-}
-*/
 
 function calculSommeFrais($unCTCN, $unCTCNIA) {
     $bdd = new PDO('mysql:host=localhost;dbname=adat;charset=UTF8', 'root', 'root') or die('Erreur connexion à la base de données');
@@ -75,7 +71,33 @@ function calculSommeFrais($unCTCN, $unCTCNIA) {
 
 
 
-function calculSommeBaseLocative($unCTCN, $unCTCNIA) {
+function calculSommeBaseLocative2($unCTCN){
+    $bdd = new PDO('mysql:host=localhost;dbname=adat;charset=UTF8', 'root', 'root') or die('Erreur connexion à la base de données');
+    $requete = "SELECT COUNT(*) FROM A1 WHERE CTCN = :unCTCN ";
+    $statement = $bdd->prepare($requete);
+    $statement->bindParam(':unCTCN', $unCTCN, PDO::PARAM_INT);
+    $statement->execute();
+    $total1 = $statement->fetch(PDO::FETCH_ASSOC);
+
+    $retour = 0 ;
+
+    if ($total1 == 1) {
+        $retour = calculTotalRecette1($unCTCN, "0") ;
+    } else {
+        $requete2 = "SELECT CTCNIA FROM a1 WHERE a1.CTCN = :unCTCN";
+        $statement2 = $bdd->prepare($requete2);
+        $statement2->bindParam(':unCTCN', $unCTCN, PDO::PARAM_INT);
+        $statement2->execute();
+        $lesDoublons = $statement2->fetchall(PDO::FETCH_ASSOC);
+
+        foreach ($lesDoublons as $unDoublon) {
+            $retour += calculSommeBaseLocative1($unCTCN, $unDoublon['CTCNIA']) ;
+        }
+    }
+        return $retour ; 
+}
+
+function calculSommeBaseLocative1($unCTCN, $unCTCNIA) {
    
     $bdd = new PDO('mysql:host=localhost;dbname=adat;charset=UTF8', 'root', 'root') or die('Erreur connexion à la base de données');
     $requete = "SELECT CTCN, CTCNIA, NCCO, VBETF0, MOBS20, CNEX01, CNEX02, MNTPXC, MNBSMA FROM baselocative WHERE CTCN = :unCTCN AND CTCNIA = :unCTCNIA";
@@ -101,14 +123,12 @@ function calculSommeBaseLocative($unCTCN, $unCTCNIA) {
         //echo getValeurLocative($unCTCN, $unCTCNIA, $uneEntr["NCCO"]) . "<br/>"
     
     }
-
-    
-    return $retour;
+    return $retour ; 
 }
 
 
 function calculTotalRecette2($unCTCN) {
-    $bdd = new PDO('mysql:host=localhost;dbname=adat;charset=UTF8', 'root', 'root') or die('Erreur connexion à la base de données');
+    $bdd = new PDO('mysql:host=localhost; dbname=adat;charset=UTF8', 'root', 'root') or die('Erreur connexion à la base de données');
     $requete = "SELECT COUNT(*) FROM A1 WHERE CTCN = :unCTCN ";
     $statement = $bdd->prepare($requete);
     $statement->bindParam(':unCTCN', $unCTCN, PDO::PARAM_INT);
@@ -137,22 +157,79 @@ function calculTotalRecette2($unCTCN) {
 function calculTotalRecette1($unCTCN, $unCTCNIA){
     $retour = 0 ;
 
-    $retour = calculSommeBaseLocative($unCTCN, $unCTCNIA)*conversionCFE(getCFE($unCTCN, $unCTCNIA)) + calculSommeFrais($unCTCN, $unCTCNIA) ; 
+    $retour = calculSommeBaseLocative1($unCTCN, $unCTCNIA)*conversionCFE(getCFE($unCTCN, $unCTCNIA)) + calculSommeFrais($unCTCN, $unCTCNIA) ; 
+    return $retour ;
+}
+
+
+function calculNewSommeBaseLocative2($unCTCN, $newExo){
+    return calculSommeBaseLocative2($unCTCN)*$newExo*0.01 ;
+}
+
+
+function calculNewTotalRecette2($unCTCN, $newCFE, $unNewExo){
+    $bdd = new PDO('mysql:host=localhost; dbname=adat;charset=UTF8', 'root', 'root') or die('Erreur connexion à la base de données');
+    $requete = "SELECT COUNT(*) FROM A1 WHERE CTCN = :unCTCN ";
+    $statement = $bdd->prepare($requete);
+    $statement->bindParam(':unCTCN', $unCTCN, PDO::PARAM_INT);
+    $statement->execute();
+    $total1 = $statement->fetch(PDO::FETCH_ASSOC);
+
+    $retour = 0 ;
+
+    if ($total1 == 1) {
+        $retour = calculNewTotalRecette1($unCTCN, "0", $newCFE, $unNewExo) ;
+    } else {
+        $requete2 = "SELECT CTCNIA FROM a1 WHERE a1.CTCN = :unCTCN";
+        $statement2 = $bdd->prepare($requete2);
+        $statement2->bindParam(':unCTCN', $unCTCN, PDO::PARAM_INT);
+        $statement2->execute();
+        $lesDoublons = $statement2->fetchall(PDO::FETCH_ASSOC);
+
+        foreach ($lesDoublons as $unDoublon) {
+            $retour += calculNewTotalRecette1($unCTCN, $unDoublon['CTCNIA'], $newCFE, $unNewExo) ;
+        }
+    }
+    
     return $retour ;
 }
 
 
 
-if (isset($_GET['num']) && isset($_GET['commune'])) {
-    $num = $_GET['num'];
-    $commune = $_GET['commune'];
+function calculNewTotalRecette1($unCTCN, $unCTCNIA, $unNewCFE, $unNewExo) {
+    return calculNewSommeBaseLocative2($unCTCN, $unNewExo)*$unNewCFE*0.01+calculSommeFrais($unCTCN, $unCTCNIA) ;
+}
 
+
+$pourNico = array(
+    array("CTCN1" =>"", "sommeBaseLocataire" => "", "sommeBaseLocataireNew" => "", "totalRecette" => "", "totalRecetteNew" => ""),
+    array("CTCN2" =>"", "sommeBaseLocataire" => "", "sommeBaseLocataireNew" => "", "totalRecette" => "", "totalRecetteNew" => "")
+) ;
+
+
+
+//---------------------------------------
+
+
+
+if (isset($_GET['ctcn1']) && isset($_GET['ctcn2']) && isset($_GET['cfe1']) && isset($_GET['cfe2']) && isset($_GET['exo1']) && isset($_GET['exo2'])) {
+    $ctcn1 = $_GET['ctcn1'];
+    $ctcn2 = $_GET['ctcn2'];
+    $cfe1 = $_GET['cfe1'];
+    $cfe2 = $_GET['cfe2'];
+    $exo1 = $_GET['exo1'] ;
+    $exo2 = $_GET['exo2'] ;
+
+    $pourNico[0]["CTCN1"]=$ctcn1;
+    $pourNico[1]["CTCN2"]=$ctcn2;
+    $pourNico[0]["sommeBaseLocataire"]=calculSommeBaseLocative2($ctcn1);
+    $pourNico[1]["sommeBaseLocataire"]=calculSommeBaseLocative2($ctcn2);
+    $pourNico[0]["totalRecette"]=calculTotalRecette2($ctcn1) ;
+    $pourNico[1]["totalRecette"]=calculTotalRecette2($ctcn2) ;
+    $pourNico[0]["sommeBaseLocataireNew"]= calculNewSommeBaseLocative2($ctcn1, $exo1) ;
+    $pourNico[1]["sommeBaseLocataireNew"]=calculNewSommeBaseLocative2($ctcn2, $exo2) ;
+    $pourNico[0]["totalRecetteNew"]=calculNewTotalRecette2($ctcn1, $cfe1, $exo1) ;
+    $pourNico[1]["totalRecetteNew"]=calculNewTotalRecette2($ctcn2, $cfe2, $exo2) ;
     
-    $bdd = new PDO('mysql:host=localhost;dbname=ajax;charset=UTF8', 'root', 'root') or die('Erreur connexion à la base de données');
-    $requete = "SELECT * FROM produit WHERE pr_id = :num";
-    $statement = $bdd->prepare($requete);
-    $statement->bindParam(':num', $num, PDO::PARAM_INT);
-    $statement->execute();
-    $lesProduits = $statement->fetch(PDO::FETCH_ASSOC);
-    echo json_encode($lesProduits);
+    echo json_encode($pourNico);
 }
